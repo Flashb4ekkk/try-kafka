@@ -1,5 +1,5 @@
 server:
-  port: 8089
+  port: 8087
 
 eureka:
   client:
@@ -19,15 +19,6 @@ jwt:
     lifetime: 1d
 
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/user
-    username: postgres
-    password: 12345
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
   main:
     allow-circular-references: true
   servlet:

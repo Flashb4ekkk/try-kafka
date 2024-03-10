@@ -6,11 +6,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,18 +13,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     @Autowired
     private UserDAO userRepository;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -93,10 +86,10 @@ public class UserService implements UserDetailsService {
                 .email(userRegistration.getEmail())
                 .firstName(userRegistration.getFirstName())
                 .lastName(userRegistration.getLastName())
-//                .mobilePhone(passwordEncoder.encode(userRegistration.getPassword()))
-                .mobilePhone(userRegistration.getPassword())
-//                .password(passwordEncoder.encode(userRegistration.getPassword()))
-                .password(userRegistration.getPassword())
+                .mobilePhone(passwordEncoder.encode(userRegistration.getPassword()))
+//                .mobilePhone(userRegistration.getPassword())
+                .password(passwordEncoder.encode(userRegistration.getPassword()))
+//                .password(userRegistration.getPassword())
                 .buck(5L)
                 .rating(7.0)
                 .role(Role.ROLE_USER)
@@ -104,6 +97,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public Optional<User> findByEmailForCheck(String email) {
         return userRepository.findByEmail(email);
     }
@@ -126,22 +120,5 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(name).get();
         user.setBuck(user.getBuck() + bucks);
         userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> userOptional = findByEmailForCheck(email);
-        if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-        User user = userOptional.get();
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authorities);
     }
 }

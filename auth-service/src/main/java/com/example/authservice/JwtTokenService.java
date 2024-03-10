@@ -1,6 +1,7 @@
-package com.example.userservice.security;
+package com.example.authservice;
 
-import com.example.userservice.Role;
+import com.example.authservice.dto.JwtResponse;
+import com.example.authservice.dto.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Service
 public class JwtTokenService {
 
     @Value("${jwt.secret}")
@@ -50,6 +50,7 @@ public class JwtTokenService {
         String roleString = getAllClaimsFromToken(token).get("role", String.class);
         return Role.valueOf(roleString);
     }
+
 
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
@@ -97,4 +98,5 @@ public class JwtTokenService {
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
+
 }

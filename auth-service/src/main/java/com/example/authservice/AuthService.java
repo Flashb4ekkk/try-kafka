@@ -1,11 +1,7 @@
-package com.example.userservice.security;
+package com.example.authservice;
 
-import com.example.userservice.Role;
-import com.example.userservice.User;
-import com.example.userservice.UserRegistration;
-import com.example.userservice.UserService;
+import com.example.authservice.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,20 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.ArrayList;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtTokenService jwtTokenService;
-
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-
+    private final JwtTokenService jwtTokenService;
+    private final AuthenticationManager authenticationManager;
+    private final UserClientImpl userService;
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
         try {
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Invalid email or password"), HttpStatus.UNAUTHORIZED);
         }
@@ -87,3 +77,5 @@ public class AuthService {
         return ResponseEntity.noContent().build();
     }
 }
+
+

@@ -5,6 +5,7 @@
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.context.annotation.Lazy;
 //import org.springframework.http.HttpStatus;
+//import org.springframework.http.codec.ServerCodecConfigurer;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,12 +15,15 @@
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 //import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 //import org.springframework.security.config.http.SessionCreationPolicy;
+//import org.springframework.security.config.web.server.ServerHttpSecurity;
 //import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.web.SecurityFilterChain;
 //import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 //import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+//import org.springframework.security.web.csrf.CsrfFilter;
+//import org.springframework.security.web.server.SecurityWebFilterChain;
 //import org.springframework.web.cors.CorsConfiguration;
 //import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 //import org.springframework.web.filter.CorsFilter;
@@ -43,17 +47,18 @@
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http
 //                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authorizeRequests ->
-//                        authorizeRequests
-//                                .requestMatchers("/api/book/**", "/api/image/**", "/login/**", "/v3/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger-ui/**").permitAll()
-//                                .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
-//                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-//
-//                )
+////                .authorizeHttpRequests(authorizeRequests ->
+////                        authorizeRequests
+////                                .requestMatchers("/login/**", "/v3/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger-ui/**").permitAll()
+////                                .requestMatchers("/apii/test").permitAll()
+////                                .requestMatchers("/apii/add").hasRole("USER")
+//////                                .requestMatchers("/apii/test/**").hasRole("USER")
+////                                .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
+////                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+////                )
 //                .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
 //                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//
 //        return http.build();
 //    }
 //
@@ -64,8 +69,6 @@
 //        config.setAllowCredentials(true);
 //        config.addAllowedOrigin("http://localhost:5173");
 //        config.addAllowedOrigin("http://localhost:8000");
-//        config.addAllowedOrigin("http://localhost:8082");
-//        config.addAllowedOrigin("http://localhost:8083");
 //        config.addAllowedOrigin("*");
 //        config.addAllowedHeader("Content-Type");
 //        config.addAllowedHeader("Authorization");
@@ -74,18 +77,12 @@
 //        config.addAllowedMethod("PUT");
 //        config.addAllowedMethod("DELETE");
 //        source.registerCorsConfiguration("/**", config);
-//
 //        return new CorsFilter(source);
 //    }
 //
 //    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
-//
-//    @Bean
 //    public UserDetailsService userDetailsService() {
-//        return new UserDetailsServiceImpl();
+//        return new UserClientImpl();
 //    }
 //
 //    @Bean
@@ -93,4 +90,3 @@
 //        return new BCryptPasswordEncoder();
 //    }
 //}
-//

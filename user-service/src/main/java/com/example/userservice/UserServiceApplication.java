@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"com.example.userservice", "com.example.userservice.security"})
 public class UserServiceApplication {
 
 	public static void main(String[] args) {

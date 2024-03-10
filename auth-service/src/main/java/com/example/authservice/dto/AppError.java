@@ -1,4 +1,4 @@
-package com.example.userservice.security;
+package com.example.authservice.dto;
 
 import lombok.Data;
 

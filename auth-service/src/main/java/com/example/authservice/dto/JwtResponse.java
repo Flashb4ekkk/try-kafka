@@ -1,6 +1,5 @@
-package com.example.userservice.security;
+package com.example.authservice.dto;
 
-import com.example.userservice.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

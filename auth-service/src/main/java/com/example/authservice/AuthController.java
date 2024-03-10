@@ -1,8 +1,10 @@
-package com.example.userservice.security;
+package com.example.authservice;
 
-import com.example.userservice.UserRegistration;
+import com.example.authservice.dto.JwtRequest;
+import com.example.authservice.dto.JwtResponse;
+import com.example.authservice.dto.UserRegistration;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +14,12 @@ import java.util.Map;
 
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/login")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
-
-    @Autowired
-    private JwtTokenService jwtTokenService;
+    private final AuthService authService;
+    private final JwtTokenService jwtTokenService;
 
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest, HttpServletResponse response) {
