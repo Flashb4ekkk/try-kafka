@@ -41,18 +41,6 @@ public class UserService {
         kafkaTemplate.send("review-service-response-topic", Long.toString(userId));
     }
 
-    @KafkaListener(topics = "auth-service-request-topic", groupId = "auth-service")
-    public void handleGetUserIdFromAuthService(String email) throws JsonProcessingException {
-        Optional<User> userOptional = findByEmailForCheck(email);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            String userJson = new ObjectMapper().writeValueAsString(user);
-            kafkaTemplate.send("auth-service-response-topic", userJson);
-        } else {
-            kafkaTemplate.send("auth-service-response-topic", "User not found");
-        }
-    }
-
     public Optional<User> findByEmail(String username) throws Exception {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new Exception("User not found"));
