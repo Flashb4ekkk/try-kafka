@@ -56,6 +56,6 @@ public class Book {
     @Column(name = "status", nullable = false, length = 30)
     BookStatus status;
 
-    @Column(name = "user_id")
-    Long userId;
+    @Column(name = "user_email")
+    String userEmail;
 }

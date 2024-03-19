@@ -1,0 +1,156 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: -1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  user-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: user
+  user-service:
+    image: user
+    ports:
+      - 8082:8082
+    depends_on:
+      - user-db
+      - config
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_FETCH_REGISTRY: 'true'
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'true'
+  book-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: book
+  book-service:
+    image: book
+    ports:
+      - 8083:8083
+    depends_on:
+      - book-db
+      - config
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://book-db:5432/book
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_FETCH_REGISTRY: 'true'
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'true'
+  review-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: review
+  review-service:
+    image: review
+    ports:
+      - 8086:8086
+    depends_on:
+      - review-db
+      - config
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://review-db:5432/review
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_FETCH_REGISTRY: 'true'
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'true'
+  wishlist-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: wishlist
+  wishlist-service:
+    image: wishlist
+    ports:
+      - 8084:8084
+    depends_on:
+      - wishlist-db
+      - config
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://wishlist-db:5432/wishlist
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_FETCH_REGISTRY: 'true'
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'true'
+  purchase-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: purchase
+  purchase-service:
+    image: purchase
+    ports:
+      - 8085:8085
+    depends_on:
+      - purchase-db
+      - config
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://purchase-db:5432/purchase
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_FETCH_REGISTRY: 'true'
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'true'
+  auth:
+    image: auth
+    ports:
+      - 8087:8087
+    depends_on:
+      - config
+    environment:
+      EUREKA_CLIENT_FETCH_REGISTRY: 'true'
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'true'
+      JWT_SECRET: sheeesh
+      JWT_ACCESS_TOKEN_LIFETIME: 1h
+      JWT_REFRESH_TOKEN_LIFETIME: 1d
+  api-gateway:
+    image: api-gateway
+    ports:
+      - 8000:8000
+    depends_on:
+      - user-service
+      - book-service
+      - review-service
+      - wishlist-service
+      - purchase-service
+      - auth
+    environment:
+      EUREKA_CLIENT_FETCH_REGISTRY: 'true'
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: 'true'
+  config:
+    image: config
+    ports:
+      - 8088:8088
+  eureka:
+    image: eureka
+    ports:
+      - 8761:8761

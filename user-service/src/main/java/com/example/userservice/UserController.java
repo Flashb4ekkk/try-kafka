@@ -69,10 +69,10 @@ public class UserController {
         return ResponseEntity.ok("User deleted");
     }
 
-    @PostMapping("/add-buck/{bucks}")
+    @PostMapping("/add-buck/{email}/{bucks}")
     @Transactional
-    public ResponseEntity<?> addBucksToUser(Principal principal, @PathVariable Long bucks) {
-        userService.addBucksToUser(principal.getName(), bucks);
+    public ResponseEntity<?> addBucksToUser(@PathVariable String email, @PathVariable Long bucks) {
+        userService.addBucksToUser(email, bucks);
         return ResponseEntity.ok("bucks added");
     }
 }

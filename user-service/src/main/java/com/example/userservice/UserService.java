@@ -1,11 +1,8 @@
 package com.example.userservice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,23 +20,6 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    @KafkaListener(topics = "book-service-request-topic", groupId = "book-service")
-    public void handleGetUserIdFromBookService(String email) {
-        Long userId = findIdByEmail(email);
-        System.out.println(userId + " book service");
-        kafkaTemplate.send("book-service-response-topic", Long.toString(userId));
-    }
-
-    @KafkaListener(topics = "review-service-request-topic", groupId = "review-service")
-    public void handleGetUserIdFromReviewService(String email) {
-        Long userId = findIdByEmail(email);
-        System.out.println(userId + " review service");
-        kafkaTemplate.send("review-service-response-topic", Long.toString(userId));
-    }
 
     public Optional<User> findByEmail(String username) throws Exception {
         User user = userRepository.findByEmail(username)
@@ -75,11 +55,9 @@ public class UserService {
                 .firstName(userRegistration.getFirstName())
                 .lastName(userRegistration.getLastName())
                 .mobilePhone(passwordEncoder.encode(userRegistration.getPassword()))
-//                .mobilePhone(userRegistration.getPassword())
                 .password(passwordEncoder.encode(userRegistration.getPassword()))
-//                .password(userRegistration.getPassword())
                 .buck(5L)
-                .rating(7.0)
+                .rating(3.5)
                 .role(Role.ROLE_USER)
                 .build();
         return userRepository.save(user);
@@ -88,10 +66,6 @@ public class UserService {
     @Transactional
     public Optional<User> findByEmailForCheck(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public Long findIdByEmail(String email) {
-        return userRepository.findIdByEmail(email);
     }
 
     public void addProfileImage(MultipartFile file, String name) {

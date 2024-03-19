@@ -25,9 +25,9 @@ public class Review {
     @Column(name = "rating", nullable = false)
     Double rating;
 
-    @Column(name = "reviewer_id", nullable = false)
-    Long reviewerId;
+    @Column(name = "reviewer_email", nullable = false)
+    String reviewerEmail;
 
-    @Column(name = "reviewee_id", nullable = false)
-    Long revieweeId;
+    @Column(name = "reviewee_email", nullable = false)
+    String revieweeEmail;
 }

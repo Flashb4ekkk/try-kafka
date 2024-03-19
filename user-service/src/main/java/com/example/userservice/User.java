@@ -55,10 +55,6 @@ public class User {
     @Column(name = "role", nullable = false, length = 20)
     Role role;
 
-    @Column(name = "wish_list_book_ids")
-    @ElementCollection
-    List<Long> wishListBookIds;
-
     @Column(name = "refresh_token")
     String refreshToken;
 }

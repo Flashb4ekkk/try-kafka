@@ -22,11 +22,11 @@ public class Purchase {
     @Column(name = "id", nullable = false)
     Long id;
 
-    @Column(name = "buyer_id", nullable = false)
-    Long buyerId;
+    @Column(name = "buyer_email", nullable = false)
+    String buyerEmail;
 
-    @Column(name = "seller_id", nullable = false)
-    Long sellerId;
+    @Column(name = "seller_email", nullable = false)
+    String sellerEmail;
 
     @Column(name = "book_id", nullable = false)
     Long bookId;

@@ -10,27 +10,11 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.reactive.config.EnableWebFlux;
 
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@EnableWebFluxSecurity
 public class ApiGatewayServiceApplication {
-
-	@RequestMapping("/circuitbreakerfallback")
-	public String circuitbreakerfallback() {
-		return "This is a fallback";
-	}
-
 	@Bean
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 		//@formatter:off
@@ -49,30 +33,6 @@ public class ApiGatewayServiceApplication {
 						.uri("http://localhost:8087"))
 				.build();
 		//@formatter:on
-	}
-
-	@Bean
-	RedisRateLimiter redisRateLimiter() {
-		return new RedisRateLimiter(1, 2);
-	}
-
-	@Bean
-	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-		return http
-				.authorizeExchange(exchanges ->
-						exchanges
-								.pathMatchers("/api/**").authenticated()
-								.anyExchange().permitAll()
-				)
-				.httpBasic(Customizer.withDefaults())
-				.csrf(Customizer.withDefaults())
-				.build();
-	}
-
-	@Bean
-	public MapReactiveUserDetailsService reactiveUserDetailsService() {
-		UserDetails user = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build();
-		return new MapReactiveUserDetailsService(user);
 	}
 
 	public static void main(String[] args) {

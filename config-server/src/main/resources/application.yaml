@@ -4,3 +4,13 @@ server:
 spring:
     profiles:
         active: native
+    kafka:
+        producer:
+            bootstrap-servers: ecstatic_jang:9092
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        consumer:
+            bootstrap-servers: ecstatic_jang:9092
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            group-id: my-group
