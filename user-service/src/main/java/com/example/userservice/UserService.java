@@ -24,15 +24,6 @@ public class UserService {
     public Optional<User> findByEmail(String username) throws Exception {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new Exception("User not found"));
-        if(user.getImage() == null) {
-            String imagePath = "C:\\Users\\roman\\IdeaProjects\\micro-service-try-kafka\\user-service\\src\\main\\resources\\static\\default-avatar.png";
-            try {
-                byte[] defaultImage = Files.readAllBytes(Paths.get(imagePath));
-                user.setImage(defaultImage);
-            } catch (IOException e) {
-                throw new Exception("Error reading default image", e);
-            }
-        }
         return Optional.of(user);
     }
 

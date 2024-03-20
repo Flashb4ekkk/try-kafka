@@ -19,6 +19,9 @@ management:
       probability: 1.0
 
 spring:
+  security:
+    csrf:
+      enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5432/user
     username: postgres
@@ -35,3 +38,14 @@ spring:
       max-file-size: 15MB
       max-request-size: 15MB
       enabled: true
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: user-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
