@@ -2,7 +2,6 @@ package com.example.apigatewayservice;
 
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,7 +20,7 @@ public class User {
     private Double rating;
     private byte[] image;
     private Long buck;
-    private List<Role> roles = new ArrayList<>();
+    private Role role;
     private List<Long> wishListBookIds;
     private String refreshToken;
 }

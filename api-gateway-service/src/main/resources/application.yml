@@ -1,13 +1,6 @@
 server:
   port: 8000
 
-jwt:
-  secret: sheeesh
-  accessToken:
-    lifetime: 1h
-  refreshToken:
-    lifetime: 1d
-
 eureka:
   client:
     serviceUrl:
@@ -18,37 +11,13 @@ management:
     sampling:
       probability: 1.0
 
+jwt:
+  secret: sheeesh
+  accessToken:
+    lifetime: 1h
+  refreshToken:
+    lifetime: 1d
+
 spring:
   main:
-    web-application-type: reactive
     allow-bean-definition-overriding: true
-  security:
-    csrf:
-      enabled: false
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: user-service
-#          uri: http://localhost:8082
-#          predicates:
-#            - Path=/api/user/**
-#        - id: book-service
-#          uri: http://localhost:8083
-#          predicates:
-#            - Path=/api/book/**
-#        - id: wishlist-service
-#          uri: http://localhost:8084
-#          predicates:
-#            - Path=/api/wishlist/**
-#        - id: purchase-service
-#          uri: http://localhost:8085
-#          predicates:
-#            - Path=/api/purchase/**
-#        - id: review-service
-#          uri: http://localhost:8086
-#          predicates:
-#            - Path=/api/review/**
-#        - id: auth-service
-#          uri: http://localhost:8087
-#          predicates:
-#            - Path=/login/**

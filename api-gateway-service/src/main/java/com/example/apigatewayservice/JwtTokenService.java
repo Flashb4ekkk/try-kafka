@@ -2,14 +2,12 @@ package com.example.apigatewayservice;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 
 @Service
-@Lazy
 public class JwtTokenService {
 
     @Value("${jwt.secret}")
