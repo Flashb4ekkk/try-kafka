@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -19,9 +20,31 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/checkEmail/{email}")
+    @Transactional
+    public Optional<User> findByEmailForCheck(@PathVariable String email) {
+        return userService.findByEmailForCheck(email);
+    }
+
+    @GetMapping("/refreshToken/{refreshToken}")
+    public User findByRefreshToken(@PathVariable String refreshToken) {
+        return userService.findByRefreshToken(refreshToken);
+    }
+
+    @PutMapping("/")
+    public void updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegistration userRegistration) {
         return ResponseEntity.ok(userService.createUser(userRegistration));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody User user) {
+        userService.updateUser(user);
+        return ResponseEntity.ok("User updated");
     }
 
     @PostMapping("/add-profile-image")
@@ -30,12 +53,6 @@ public class UserController {
         userService.addProfileImage(file, principal.getName());
         return ResponseEntity.ok("Image added");
     }
-
-//    @GetMapping("/get-user")
-//    @Transactional
-//    public ResponseEntity<?> getUser(Principal principal) throws Exception {
-//        return ResponseEntity.ok(userService.findByEmail(principal.getName()));
-//    }
 
     @GetMapping("/get-user/{email}")
     @Transactional
@@ -52,10 +69,10 @@ public class UserController {
         return ResponseEntity.ok("User deleted");
     }
 
-    @PostMapping("/add-buck/{bucks}")
+    @PostMapping("/add-buck/{email}/{bucks}")
     @Transactional
-    public ResponseEntity<?> addBucksToUser(Principal principal, @PathVariable Long bucks) {
-        userService.addBucksToUser(principal.getName(), bucks);
+    public ResponseEntity<?> addBucksToUser(@PathVariable String email, @PathVariable Long bucks) {
+        userService.addBucksToUser(email, bucks);
         return ResponseEntity.ok("bucks added");
     }
 }

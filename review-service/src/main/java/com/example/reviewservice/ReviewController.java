@@ -1,5 +1,6 @@
 package com.example.reviewservice;
 
+import com.example.reviewservice.dto.ReviewDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,13 @@ public class ReviewController {
 
     @PostMapping("/add/{email}")
     @Transactional
-    public ResponseEntity<Review> createReview(@RequestBody ReviewDTO review, @PathVariable String email) {
+    public ResponseEntity<Review> createReview(@RequestBody Review review, @PathVariable String email) {
         return ResponseEntity.ok(reviewService.createReview(review, email));
     }
 
     @GetMapping("/get/{email}")
-    public ResponseEntity<List<Review>> getReviewsByUserEmail(@PathVariable String email) {
+    @Transactional
+    public ResponseEntity<List<ReviewDTO>> getReviewsByUserEmail(@PathVariable String email) {
         return ResponseEntity.ok(reviewService.getReviewsByUserEmail(email));
     }
 

@@ -13,13 +13,4 @@ public enum Role {
     ROLE_EDITOR(1808);
 
     private int value;
-
-    public static Role valueOf(int value) {
-        for (Role role : Role.values()) {
-            if (role.getValue() == value) {
-                return role;
-            }
-        }
-        throw new IllegalArgumentException("No Role with value " + value);
-    }
 }

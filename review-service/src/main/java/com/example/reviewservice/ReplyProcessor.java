@@ -7,16 +7,15 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ReplyProcessor {
-    private final CompletableFuture<String> future = new CompletableFuture<>();
+    private CompletableFuture<String> future;
 
-    @KafkaListener(topics = "review-service-response-topic", groupId = "get_user_id")
-    public void processReply(String userId) {
-        System.out.println("Received reply: " + userId);
-        future.complete(userId);
+    @KafkaListener(topics = "review-service-response-get-user-by-email-topic", groupId = "review-service")
+    public void processUserResponse(String userJson) {
+        future.complete(userJson);
     }
 
-    public CompletableFuture<Long> waitForReply() {
-        return future.thenApply(Long::parseLong);
+    public CompletableFuture<String> waitForReply() {
+        future = new CompletableFuture<>();
+        return future;
     }
 }
-

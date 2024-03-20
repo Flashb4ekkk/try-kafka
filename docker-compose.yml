@@ -1,0 +1,160 @@
+version: '3'
+services:
+  eureka:
+    image: eureka-service
+    ports:
+      - 8761:8761
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: -1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  auth:
+    image: auth-service-try
+    ports:
+      - 8087:8087
+    depends_on:
+      - eureka
+      - kafka
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      JWT_SECRET: sheeesh
+      JWT_ACCESS_TOKEN_LIFETIME: 1h
+      JWT_REFRESH_TOKEN_LIFETIME: 1d
+  user-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: user
+  user-service:
+    image: user-service-try
+    ports:
+      - 8082:8082
+    depends_on:
+      - user-db
+      - eureka
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      JWT_SECRET: sheeesh
+      JWT_ACCESS_TOKEN_LIFETIME: 1h
+      JWT_REFRESH_TOKEN_LIFETIME: 1d
+      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:9092
+  book-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: book
+  book-service:
+    image: book-service-try
+    ports:
+      - 8083:8083
+    depends_on:
+      - book-db
+      - eureka
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://book-db:5432/book
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:9092
+#  review-db:
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 12345
+#      POSTGRES_DB: review
+#  review-service:
+#    image: review-service-try
+#    ports:
+#      - 8086:8086
+#    depends_on:
+#      - review-db
+#      - eureka
+#      - kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://review-db:5432/review
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: 12345
+#      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+#      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
+#  wishlist-db:
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 12345
+#      POSTGRES_DB: wishlist
+#  wishlist-service:
+#    image: wishlist-service-try
+#    ports:
+#      - 8084:8084
+#    depends_on:
+#      - wishlist-db
+#      - eureka
+#      - kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://wishlist-db:5432/wishlist
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: 12345
+#      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+#      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
+#  purchase-db:
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 12345
+#      POSTGRES_DB: purchase
+#  purchase-service:
+#    image: purchase-service-try
+#    ports:
+#      - 8085:8085
+#    depends_on:
+#      - purchase-db
+#      - eureka
+#      - kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://purchase-db:5432/purchase
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: 12345
+#      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+#      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
+#  api-gateway:
+#    image: api-gateway
+#    ports:
+#      - 8000:8000
+#    environment:
+#      SERVER_PORT: 8000
+#      JWT_SECRET: sheeesh
+#      JWT_ACCESS_TOKEN_LIFETIME: 1h
+#      JWT_REFRESH_TOKEN_LIFETIME: 1d
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+#      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
+#      SPRING_MAIN_WEB-APPLICATION-TYPE: reactive

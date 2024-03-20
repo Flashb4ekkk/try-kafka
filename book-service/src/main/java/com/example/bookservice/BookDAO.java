@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface BookDAO extends JpaRepository<Book, Long> {
-    List<Book> findByUserId(Long userId);
+    List<Book> findByUserEmail(String email);
 }

@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ReviewDAO extends JpaRepository<Review, Long> {
-    List<Review> findAllByRevieweeId(Long id);
-
+    List<Review> findAllByRevieweeEmail(String email);
 }
