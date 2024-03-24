@@ -19,12 +19,6 @@ public class JwtTokenService {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.accessToken.lifetime}")
-    private Duration jwtAccessTokenLifetime;
-
-    @Value("${jwt.refreshToken.lifetime}")
-    private Duration jwtRefreshTokenLifetime;
-
     public String getEmail(String token) {
         return getAllClaimsFromToken(token).getSubject();
     }
@@ -39,30 +33,5 @@ public class JwtTokenService {
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    String generateJwt(UserDetails userDetails) {
-        Map<String, Object> header = new HashMap<>();
-        header.put("alg", "HS256");
-        header.put("typ", "JWT");
-
-        Map<String, Object> claims = new HashMap<>();
-        Role role = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(Role::valueOf)
-                .findFirst()
-                .orElse(Role.ROLE_USER);
-        claims.put("role", role);
-
-        Date issuedDate = new Date();
-        Date expiredDate = new Date(issuedDate.getTime() + jwtAccessTokenLifetime.toMillis());
-        return Jwts.builder()
-                .setHeader(header)
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(issuedDate)
-                .setExpiration(expiredDate)
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
     }
 }

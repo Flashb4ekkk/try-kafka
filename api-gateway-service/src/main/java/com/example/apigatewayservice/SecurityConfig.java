@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 .pathMatchers("/tt").permitAll()
                                 .pathMatchers("/login/**", "/v3/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger-ui/**").permitAll()
                                 .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
+//                                .pathMatchers("/api/**").authenticated()
                 )
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .exceptionHandling(c -> c.authenticationEntryPoint((swe, e) -> Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED))))

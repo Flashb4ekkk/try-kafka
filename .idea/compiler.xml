@@ -13,12 +13,12 @@
         <module name="api-gateway-service" />
         <module name="review-service" />
         <module name="purchase-service" />
-        <module name="api-gateway" />
         <module name="user-service" />
         <module name="wishlist-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="api-gateway" target="17" />
       <module name="api-gateway-service (1)" target="17" />
       <module name="config-server" target="17" />
     </bytecodeTargetLevel>
