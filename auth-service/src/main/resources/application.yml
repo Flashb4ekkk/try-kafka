@@ -19,6 +19,8 @@ jwt:
     lifetime: 1d
 
 spring:
+  application:
+    name: auth-service
   main:
     allow-circular-references: true
   servlet:

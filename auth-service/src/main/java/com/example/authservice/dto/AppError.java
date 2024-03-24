@@ -2,6 +2,8 @@ package com.example.authservice.dto;
 
 import lombok.Data;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Date;
 
 @Data

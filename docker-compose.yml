@@ -152,18 +152,6 @@ services:
 #      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
 #      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
 #      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:9092
-  api-gateway:
-    build: ./api-gateway-gateway-service
-    image: api-gateway-web
-    ports:
-      - 8000:8000
-    environment:
-      SERVER_PORT: 8000
-      JWT_SECRET: sheeesh
-      JWT_ACCESS_TOKEN_LIFETIME: 1h
-      JWT_REFRESH_TOKEN_LIFETIME: 1d
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
-      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
   api-gateway-gateway:
     build: ./api-gateway-service
     image: api-gateway-gateway

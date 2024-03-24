@@ -21,30 +21,42 @@ jwt:
 spring:
   main:
     allow-bean-definition-overriding: true
-  cloud:
-    gateway:
-      routes:
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/user/**
-        - id: book-service
-          uri: lb://book-service
-          predicates:
-            - Path=/api/book/**
-        - id: wishlist-service
-          uri: lb://wishlist-service
-          predicates:
-            - Path=/api/wishlist/**
-        - id: purchase-service
-          uri: lb://purchase-service
-          predicates:
-            - Path=/api/purchase/**
-        - id: review-service
-          uri: lb://review-service
-          predicates:
-            - Path=/api/review/**
-        - id: auth-service
-          uri: lb://auth-service
-          predicates:
-            - Path=/login/**
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: user-service
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/api/user/**
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#        - id: book-service
+#          uri: lb://book-service
+#          predicates:
+#            - Path=/api/book/**
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#        - id: wishlist-service
+#          uri: lb://wishlist-service
+#          predicates:
+#            - Path=/api/wishlist/**
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#        - id: purchase-service
+#          uri: lb://purchase-service
+#          predicates:
+#            - Path=/api/purchase/**
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#        - id: review-service
+#          uri: lb://review-service
+#          predicates:
+#            - Path=/api/review/**
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#        - id: auth-service
+#          uri: lb://auth-service
+#          predicates:
+#            - Path=/login/**
+#          filters:
+#            - RemoveRequestHeader=Cookie

@@ -19,6 +19,8 @@ management:
       probability: 1.0
 
 spring:
+  application:
+    name: user-service
   security:
     csrf:
       enabled: false
